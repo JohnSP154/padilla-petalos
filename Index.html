@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formar Nombre con Pétalos y Fondo Dinámico</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f0e5f9; /* Fondo suave color lavanda */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Organiza el contenido verticalmente */
+        }
+
+        .flower-container {
+            position: relative;
+            width: 600px; /* Ancho fijo para el contenedor */
+            height: 100px; /* Altura fija para el contenedor */
+            display: flex;
+            justify-content: center; /* Centra las letras horizontalmente */
+            align-items: center; /* Centra las letras verticalmente */
+            margin-bottom: 50px; /* Espacio entre el nombre y el texto de SheyPadilla */
+            z-index: 2; /* Asegura que el nombre y el texto estén sobre los pétalos */
+        }
+
+        .letter {
+            font-size: 50px;
+            position: absolute;
+            opacity: 0;
+            font-weight: bold;
+            color: #ff66b2; /* Color rosado */
+            transition: all 1s ease-out;
+        }
+
+        /* Animación de caída de pétalos lilas */
+        @keyframes fall {
+            0% {
+                top: -50px;
+                opacity: 1;
+                transform: rotate(0deg);
+            }
+            100% {
+                top: 100vh; /* Hace que los pétalos caigan por toda la pantalla */
+                opacity: 0;
+                transform: rotate(360deg);
+            }
+        }
+
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #9b59b6; /* Color lila */
+            border-radius: 50%;
+            animation: fall linear infinite;
+            opacity: 0;
+        }
+
+        /* Crea pétalos adicionales con retrasos y tamaños aleatorios */
+        .petal:nth-child(odd) {
+            animation-duration: 8s; /* Aumentamos el tiempo a 8s para hacer que caigan más lentamente */
+            width: 25px;
+            height: 25px;
+        }
+
+        .petal:nth-child(even) {
+            animation-duration: 12s; /* Aumentamos el tiempo a 12s para hacer que caigan más lentamente */
+            width: 15px;
+            height: 15px;
+        }
+
+        /* Estilo para el texto SheyPadilla */
+        .copy-text {
+            font-size: 30px;
+            font-weight: bold;
+            color: #9b59b6; /* Color lila */
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards;
+            z-index: 1; /* Asegura que el texto esté por encima de los pétalos */
+        }
+
+        /* Animación para el texto SheyPadilla */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="flower-container" id="flowerContainer"></div>
+    
+    <!-- Texto de copia SheyPadilla -->
+    <div class="copy-text" id="copyText">Ing.SheyPadilla</div>
+
+    <script>
+        // Nombre que queremos formar
+        const name = "Hellen";
+        const flowerContainer = document.getElementById("flowerContainer");
+
+        // Crear las letras y asignarles posiciones iniciales aleatorias
+        function createLetters() {
+            for (let i = 0; i < name.length; i++) {
+                const letter = document.createElement("div");
+                letter.classList.add("letter");
+                letter.textContent = name[i];
+
+                // Asignar una posición aleatoria inicial
+                letter.style.left = `${Math.random() * window.innerWidth}px`; 
+                letter.style.top = `${Math.random() * window.innerHeight}px`; 
+                flowerContainer.appendChild(letter);
+
+                // Animar la letra para que se desplace hasta su posición final
+                setTimeout(() => {
+                    letter.style.left = `${i * 100 + 50}px`; // Espaciado entre letras
+                    letter.style.top = '0px'; // Alinearlas en la parte superior
+                    letter.style.opacity = 1; // Hacer visible la letra
+                }, i * 300); // Cada letra tiene un retraso en la animación
+            }
+        }
+
+        // Crear los pétalos lilas cayendo por toda la pantalla
+        function createPetals() {
+            const numPetals = 200; // Número de pétalos a generar
+
+            for (let i = 0; i < numPetals; i++) {
+                const petal = document.createElement("div");
+                petal.classList.add("petal");
+                petal.style.left = `${Math.random() * window.innerWidth}px`; // Posición aleatoria horizontal
+                petal.style.animationDelay = `${Math.random() * 5}s`; // Retraso aleatorio para la caída
+                document.body.appendChild(petal); // Los pétalos se agregan al <body> y no al contenedor del nombre
+            }
+        }
+
+        // Inicialización
+        createLetters(); // Crear letras del nombre
+        createPetals();  // Crear pétalos cayendo
+    </script>
+
+</body>
+</html>
